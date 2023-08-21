@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>短链接生成器</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://cdn.staticaly.com/gh/xinhaojin/imgs-host@master/20230821/tutu.7cfpopzisy40.webp" sizes="16*16">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-top: 10%;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #shortUrl {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .copy-message {
+            display: none;
+            color: #28a745;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>短链接生成器</h1>
+    <input type="text" id="longUrl" placeholder="请输入原始长链接">
+    <button onclick="shortenURL()">生成短链接</button>
+    <p>短链接: <span id="shortUrl"></span></p>
+    <button onclick="copyToClipboard()">复制到剪贴板</button>
+    <div class="copy-message" id="copyMessage">复制成功！</div>
+</div>
+
+<script>
+    function shortenURL() {
+        const longUrl = document.getElementById('longUrl').value;
+        fetch(`/api/shorten?url=${encodeURIComponent(longUrl)}`)
+            .then(response => response.text())
+            .then(shortUrl => {
+                const fullShortUrl = `https://s.xinhaojin.top/s/${shortUrl}`;
+                const shortUrlElement = document.getElementById('shortUrl');
+                shortUrlElement.innerHTML = `<a href="${fullShortUrl}" target="_blank">${fullShortUrl}</a>`;
+            });
+    }
+
+
+    function copyToClipboard() {
+        const shortUrl = document.getElementById('shortUrl').textContent;
+        const tempInput = document.createElement('input');
+        tempInput.value = shortUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        const copyMessage = document.getElementById('copyMessage');
+        copyMessage.style.display = 'block';
+        setTimeout(() => {
+            copyMessage.style.opacity = '1';
+        }, 10);
+
+        setTimeout(() => {
+            copyMessage.style.opacity = '0';
+        }, 1500);
+    }
+</script>
+</body>
+</html>
