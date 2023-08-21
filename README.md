@@ -399,7 +399,13 @@ sudo systemctl is-enabled nginx
 ```bash
 sudo systemctl enable nginx
 ```
-### 申请SSL证书，需要临时关闭nginx以释放80端口
+### 申请SSL证书
+安装certbot
+```bash
+sudo apt update
+sudo apt install certbot
+```
+临时关闭nginx以释放80端口
 ```bash
 sudo systemctl stop nginx
 sudo certbot certonly --standalone -d s.xinhaojin.top
