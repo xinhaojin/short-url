@@ -1,10 +1,21 @@
 ## 介绍
+
 这是一个长链接转短链接的SpringBoot项目，利用Redis存储长短链接的键值关系
+
 ## 实现
+
 ### 创建项目
+
 用Spring Initializr创建一个空项目，使用Java8、SpringBoot2版本，勾选spring web
+
+**github地址：https://github.com/xinhaojin/short-url**
+
+**演示站点：https://s.xinhaojin.top**
+
 ### 前端页面
+
 在resource/static下创建index.html
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -106,8 +117,11 @@
 </body>
 </html>
 ```
+
 ### controller
+
 MyController.java，给前端提供生成短链接和恢复长链接的接口
+
 ```java
 package top.xinhaojin.shorturl.controller;
 
@@ -143,7 +157,9 @@ public class MyController {
     }
 }
 ```
+
 RedirectController.java,处理用户访问短链接时的重定向
+
 ```java
 package top.xinhaojin.shorturl.controller;
 
@@ -180,8 +196,11 @@ public class RedirectController {
     }
 }
 ```
+
 ### service
+
 MyService.java
+
 ```java
 package top.xinhaojin.shorturl.service;
 
@@ -275,14 +294,18 @@ public class MyService {
     }
 }
 ```
+
 ### application.properties
+
 ```
 spring.redis.host=1.15.xx.xxx
 spring.redis.port=6379
 
 server.port=7777
 ```
+
 ### pom.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -333,12 +356,17 @@ server.port=7777
 
 </project>
 ```
+
 ## docker部署
+
 ### 在项目根目录终端下执行以下maven命令，会在target下生成jar文件
+
 ```bash
 mvn clean package
 ```
+
 ### 新建一个名为Dockerfile的文件，内容如下
+
 ```dockerfile
 # 使用一个基础的 Java 镜像
 FROM openjdk:8-jdk-alpine
@@ -352,30 +380,43 @@ EXPOSE 7777
 # 运行 Spring Boot 应用程序
 CMD ["java", "-jar", "/app.jar"]
 ```
+
 ### 在有docker环境的地方如安装了docker的Ubuntu服务器上，创建docker镜像
+
 ```bash
 # docker build -t your-image-name:your-tag .
 docker build -t short-url:v1.0 .
 ```
+
 ### 运行docker镜像
+
 ```bash
 # docker run -d -p 7777:7777 your-image-name:tag
 docker run -d -p 7777:7777 short-url:v1.0
 ```
+
 ### 检查运行情况
+
 ```bash
 docker ps
 ```
+
 ## 绑定域名,用nginx做好反向代理
+
 解析一个二级域名到目标服务器，如s.xinhaojin.top
+
 ### 查看nginx版本，如果没有，就安装
+
 ```bash
 nginx -v
 sudo apt update
 sudo apt install nginx
 ```
+
 ### 修改/etc/nginx/nginx.conf
+
 在http标签里添加一个server
+
 ```nginx
 server {
 		listen 80;
@@ -390,28 +431,40 @@ server {
 		}
 	}
 ```
+
 ### 检查 Nginx 服务是否已经存在于 systemd 中：
+
 ```bash
 sudo systemctl is-enabled nginx
 ```
+
 如果返回 disabled，则表示 Nginx 目前不会开机自启。
 如果 Nginx 尚未开机自启，可以使用以下命令启用：
+
 ```bash
 sudo systemctl enable nginx
 ```
+
 ### 申请SSL证书
+
 安装certbot
+
 ```bash
 sudo apt update
 sudo apt install certbot
 ```
+
 临时关闭nginx以释放80端口
+
 ```bash
 sudo systemctl stop nginx
 sudo certbot certonly --standalone -d s.xinhaojin.top
 ```
+
 ### 修改nginx配置/etc/nginx/nginx.conf
+
 把上一个server删去，替换以下代码
+
 ```nginx
 server {
     listen 80;
@@ -442,7 +495,9 @@ server {
     }
 }
 ```
+
 ### 重启nginx
+
 ```bash
 sudo systemctl start nginx
 sudo systemctl reload nginx
