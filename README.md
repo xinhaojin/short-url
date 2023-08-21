@@ -2,15 +2,15 @@
 
 这是一个长链接转短链接的SpringBoot项目，利用Redis存储长短链接的键值关系
 
+**github地址：https://github.com/xinhaojin/short-url**
+
+**演示站点：https://s.xinhaojin.top**
+
 ## 实现
 
 ### 创建项目
 
 用Spring Initializr创建一个空项目，使用Java8、SpringBoot2版本，勾选spring web
-
-**github地址：https://github.com/xinhaojin/short-url**
-
-**演示站点：https://s.xinhaojin.top**
 
 ### 前端页面
 
